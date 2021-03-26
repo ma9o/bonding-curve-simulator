@@ -1,4 +1,5 @@
 """Console script for bonding_curve_simulator."""
+from bonding_curve_simulator.bonding_curve_simulator import run_simulation
 import sys
 import click
 
@@ -6,9 +7,9 @@ import click
 @click.command()
 def main(args=None):
     """Console script for bonding_curve_simulator."""
-    click.echo("Replace this message by putting your code into "
-               "bonding_curve_simulator.cli.main")
-    click.echo("See click documentation at https://click.palletsprojects.com/")
+
+    # run_simulation()
+
     return 0
 
 
