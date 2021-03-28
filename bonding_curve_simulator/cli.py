@@ -1,14 +1,21 @@
 """Console script for bonding_curve_simulator."""
+from bonding_curve_simulator.helpers.profiling import with_profiling
 from bonding_curve_simulator.bonding_curve_simulator import run_simulation
 import sys
 import click
 
 
 @click.command()
-def main(args=None):
-    """Console script for bonding_curve_simulator."""
-
-    # run_simulation()
+@click.option(
+    "--profile",
+    help="Get cProfile information.",
+    is_flag=True,
+)
+def main(profile):
+    if profile:
+        with_profiling(run_simulation)
+    else:
+        run_simulation()
 
     return 0
 

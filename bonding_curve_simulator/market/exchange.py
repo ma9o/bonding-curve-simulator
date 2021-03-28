@@ -3,6 +3,7 @@ from typing import Dict
 from bonding_curve_simulator.mesa.agents.creator import CreatorAgent
 from bonding_curve_simulator.market.bonding_curve import BondingCurve
 from enum import Enum
+from dataclasses import dataclass
 
 
 class TaxType(Enum):
@@ -10,23 +11,31 @@ class TaxType(Enum):
     ABSOLUTE = 1
 
 
+@dataclass
+class TaxConfig:
+    tax_amount: float = 0.0
+    tax_type: TaxType = TaxType.RELATIVE
+
+
+@dataclass
+class ExchangeConfig:
+    supply: float = 100.0
+    reserve: float = 100.0
+
+
 class Exchange:
     def __init__(
         self,
         bonding_curve: BondingCurve,
-        config: Dict = {
-            "supply": 100,
-            "reserve": 100,
-            "tax_amount": 0.0,
-            "tax_type": TaxType.RELATIVE,
-        },
+        exchange_config: ExchangeConfig = ExchangeConfig(),
+        tax_config: TaxConfig = TaxConfig(),
     ):
         self.bonding_curve = bonding_curve
 
-        self.supply = config["supply"]
-        self.reserve = config["reserve"]
-        self.tax_amount = config["tax_amount"]
-        self.tax_type = config["tax_type"]
+        self.supply = exchange_config.supply
+        self.reserve = exchange_config.reserve
+        self.tax_amount = tax_config.tax_amount
+        self.tax_type = tax_config.tax_type
 
     def set_creator(self, creator: CreatorAgent):
         self.creator = creator
@@ -43,16 +52,28 @@ class Exchange:
             tax = reserve_amount * self.tax_amount
 
         # Send tax to creator
-        self.creator.wealth += tax
+        self.creator.reserve += tax
 
         # Perform transaction
-        effective_amount = reserve_amount - tax
-
-        trader.reserve -= effective_amount
-        trader.supply += self.bonding_curve.get_purchase_return(
-            self.supply, effective_amount
+        reserve_amount -= tax
+        supply_amount = self.bonding_curve.get_purchase_return(
+            self.supply, reserve_amount
         )
 
+        trader.reserve -= reserve_amount
+        trader.supply += supply_amount
+
+        self.reserve += reserve_amount
+        self.supply -= supply_amount
+
     def sell(self, trader: TraderAgent, supply_amount) -> None:
+        reserve_amount = self.bonding_curve.get_sale_return(self.supply, supply_amount)
+
         trader.supply -= supply_amount
-        trader.reserve += self.bonding_curve.get_sale_return(self.supply, supply_amount)
+        trader.reserve += reserve_amount
+
+        self.supply += supply_amount
+        self.reserve -= reserve_amount
+
+    def current_price(self) -> float:
+        return self.bonding_curve.current_price(self.supply)

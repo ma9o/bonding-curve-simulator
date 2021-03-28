@@ -1,4 +1,3 @@
-from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 from typing import cast
 from mesa import Agent
 
@@ -17,7 +16,7 @@ class TraderAgent(Agent):
             pass
         elif r < 25:
             sale_amount = self.model.random.uniform(0.0, self.supply)
-            cast(SimulationModel, self.model).exchange.sell(self, sale_amount)
+            self.model.exchange.sell(self, sale_amount)
         elif r > 75:
             reserve_amount = self.model.random.uniform(0.0, self.reserve)
-            cast(SimulationModel, self.model).exchange.buy(self, reserve_amount)
+            self.model.exchange.buy(self, reserve_amount)

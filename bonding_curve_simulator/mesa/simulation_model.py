@@ -1,15 +1,15 @@
-from bonding_curve_simulator.market.bonding_curve import BondingCurve
-from typing import Dict
 from bonding_curve_simulator.market.exchange import Exchange
 from bonding_curve_simulator.mesa.agents.creator import CreatorAgent
 from bonding_curve_simulator.mesa.agents.trader import TraderAgent
 from mesa import Model
 from mesa.time import RandomActivation
+from mesa.datacollection import DataCollector
 
 
 class SimulationModel(Model):
-    def __init__(self, exchange: Exchange, max_steps=1000, num_agents=1000):
-        self.result = []
+    def __init__(self, exchange: Exchange, max_steps=1000, num_agents=100):
+        super().__init__()
+
         self.max_steps = max_steps
         self.num_agents = num_agents
 
@@ -27,8 +27,19 @@ class SimulationModel(Model):
             a = TraderAgent(i, self)
             self.schedule.add(a)
 
+        self.datacollector = DataCollector(
+            model_reporters={
+                "Price": self.exchange.current_price,
+                "Supply": lambda x: self.exchange.supply,
+                "Reserve": lambda x: self.exchange.reserve,
+            },
+            agent_reporters={"Supply": "supply", "Reserve": "reserve"},
+        )
+
     def step(self):
-        if self.schedule.steps < self.max_steps:
+        self.datacollector.collect(self)
+
+        if self.schedule.steps > self.max_steps:
             self.running = False
         else:
             self.schedule.step()

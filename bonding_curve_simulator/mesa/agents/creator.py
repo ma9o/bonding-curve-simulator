@@ -1,14 +1,20 @@
-from typing import cast
+from enum import Enum
 from mesa import Agent
+
+
+class CratorType(Enum):
+    SUCCESSFUL = 0
+    AVERAGE = 1
+    UNSUCCESSFUL = 2
 
 
 class CreatorAgent(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.wealth = 1
-        self.monthly_revenue = 100
+        self.reserve = 1
+        self.supply = 0
+        self.monthly_revenue = 10
 
     def step(self):
-        pass
-        # print(repr(self.model.schedule))
-        # cast(SimulationModel, self.model).exchange.reserve += self.monthly_revenue
+        if self.model.schedule.steps % 30 == 0:
+            self.model.exchange.reserve += self.monthly_revenue
