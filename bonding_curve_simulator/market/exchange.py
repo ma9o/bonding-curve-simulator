@@ -7,8 +7,8 @@ from dataclasses import dataclass
 
 
 class TaxType(Enum):
-    RELATIVE = 0
-    ABSOLUTE = 1
+    RELATIVE = "relative"
+    ABSOLUTE = "absolute"
 
 
 @dataclass
@@ -41,6 +41,7 @@ class Exchange:
         self.creator = creator
 
     def buy(self, trader: TraderAgent, reserve_amount) -> None:
+
         # Apply tax to transaction
         tax = None
         if self.tax_type == TaxType.ABSOLUTE:

@@ -1,38 +1,47 @@
 """Main module."""
 
-from collections import defaultdict
 from bonding_curve_simulator.market.exchange import (
     Exchange,
     ExchangeConfig,
     TaxConfig,
+    TaxType,
 )
 from bonding_curve_simulator.market.bonding_curve import (
     BondingCurve,
     CurveType,
     LogisticConfig,
-    PowerConfig,
+    ExponentialConfig,
 )
 from typing import Dict, List
 from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 
 
-# -> List[float]
-def run_simulation(config=defaultdict(lambda: {})):
+def init_model(
+    curve_type=CurveType.EXPONENTIAL,
+    curve_config=ExponentialConfig(),
+    initial_supply=100.0,
+    initial_reserve=100.0,
+    tax_type=TaxType.RELATIVE,
+    tax_amount=0.0,
+):
 
-    curve_type = config["curve_type"] or CurveType.POWER
     curve_config_type = (
-        LogisticConfig if curve_type == CurveType.LOGISTIC else PowerConfig
+        LogisticConfig if curve_type == CurveType.LOGISTIC else ExponentialConfig
     )
 
-    curve_config = curve_config_type(**config["curve_config"])
-    exchange_config = ExchangeConfig(**config["exchange_config"])
-    tax_config = TaxConfig(**config["tax_config"])
+    curve_config = curve_config_type(**curve_config)
+
+    exchange_config = ExchangeConfig(initial_supply, initial_reserve)
+    tax_config = TaxConfig(tax_amount, tax_type)
 
     exchange = Exchange(BondingCurve(curve_config), exchange_config, tax_config)
 
     model = SimulationModel(exchange)
 
+    return model
+
+
+def run_simulation(model: SimulationModel) -> SimulationModel:
     model.run_model()
 
-    model.datacollector.get_model_vars_dataframe().to_csv("datacollector/model.csv")
-    model.datacollector.get_agent_vars_dataframe().to_csv("datacollector/agent.csv")
+    return model

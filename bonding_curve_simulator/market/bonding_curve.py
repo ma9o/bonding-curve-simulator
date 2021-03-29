@@ -7,30 +7,44 @@ import numpy as np
 
 
 class CurveType(Enum):
-    POWER = "power"
+    EXPONENTIAL = "exponential"
     LOGISTIC = "logistic"
 
 
+# https://en.wikipedia.org/wiki/Generalised_logistic_function
 @dataclass
 class LogisticConfig:
-    x: float = 0
+    a: float = 0.0
+    k: float = 1.0
+    b: float = 3.0
+    v: float = 0.5
+    q: float = 0.5
+    c: float = 1.0
+    m: float = 3.0
 
 
 @dataclass
-class PowerConfig:
+class ExponentialConfig:
     m: float = 1.0 / 400
     n: float = 2.0
+    y0: float = 0.0
+    x0: float = 0.0
 
 
 class BondingCurve:
-    def __init__(self, config: Union[LogisticConfig, PowerConfig]):
+    def __init__(self, config: Union[LogisticConfig, ExponentialConfig]):
 
-        # TODO: parametrize -> https://en.wikipedia.org/wiki/Generalised_logistic_function
         if isinstance(config, LogisticConfig):
-            self.bonding_formula = lambda x: 1.0 / ((1.0 - np.exp(1)) ** (-x))
+            self.bonding_formula = lambda x: config.a + (
+                (config.k - config.a)
+                / (config.c + ((config.q * np.e) ** (-config.b * (x - config.m))))
+                ** (1 / config.v)
+            )
 
-        if isinstance(config, PowerConfig):
-            self.bonding_formula = lambda x: config.m * (x ** config.n)
+        if isinstance(config, ExponentialConfig):
+            self.bonding_formula = lambda x: config.y0 + config.m * (
+                (x - config.x0) ** config.n
+            )
 
     def current_price(self, supply) -> float:
         return self.bonding_formula(supply)
