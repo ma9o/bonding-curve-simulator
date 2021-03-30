@@ -2,5 +2,8 @@
     "python.formatting.provider": "black",
     "python.linting.enabled": true,
     "python.analysis.typeCheckingMode": "basic",
-    "python.languageServer": "Pylance"
+    "python.languageServer": "Pylance",
+    "yaml.schemas": {
+        "config/schema.json": "config/*.yml"
+    }
 }

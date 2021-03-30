@@ -2,7 +2,7 @@
 
 from bonding_curve_simulator.market.exchange import (
     Exchange,
-    ExchangeConfig,
+    WealthConfig,
     TaxConfig,
     TaxType,
 )
@@ -17,12 +17,15 @@ from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 
 
 def init_model(
-    curve_type=CurveType.EXPONENTIAL,
-    curve_config=ExponentialConfig(),
-    initial_supply=100.0,
-    initial_reserve=100.0,
-    tax_type=TaxType.RELATIVE,
-    tax_amount=0.0,
+    curve_type,
+    curve_config,
+    initial_supply,
+    initial_reserve,
+    tax_type,
+    tax_amount,
+    max_steps,
+    max_agents,
+    max_revenue,
 ):
 
     curve_config_type = (
@@ -31,12 +34,12 @@ def init_model(
 
     curve_config = curve_config_type(**curve_config)
 
-    exchange_config = ExchangeConfig(initial_supply, initial_reserve)
+    exchange_config = WealthConfig(initial_supply, initial_reserve)
     tax_config = TaxConfig(tax_amount, tax_type)
 
     exchange = Exchange(BondingCurve(curve_config), exchange_config, tax_config)
 
-    model = SimulationModel(exchange)
+    model = SimulationModel(exchange, max_steps, max_agents, max_revenue)
 
     return model
 

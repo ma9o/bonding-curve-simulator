@@ -1,0 +1,31 @@
+exchange:
+  wealth:
+    supply: 100.0
+    reserve: 100.0
+  tax:
+    type: relative
+    amount: 0.02
+  bonding_curve:
+    type: logistic
+    config:
+      a: 123
+      b: 324
+
+model:
+  max_steps: 1000
+  creator:
+    target_revenue: 123
+    growth_curve:
+      type: logistic
+      config:
+        a: 123
+        b: 324
+  traders:
+    - type: zero_intelligence
+      count: 100
+      wealth:
+        supply: 100.0
+        reserve: 100.0
+      config:
+        a: 213
+        b: 324

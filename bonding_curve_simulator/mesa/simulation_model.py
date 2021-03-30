@@ -7,7 +7,9 @@ from mesa.datacollection import DataCollector
 
 
 class SimulationModel(Model):
-    def __init__(self, exchange: Exchange, max_steps=1000, num_agents=100):
+    def __init__(
+        self, exchange: Exchange, max_steps=3650, num_agents=100, max_revenue=100.0
+    ):
         super().__init__()
 
         self.max_steps = max_steps
@@ -15,7 +17,7 @@ class SimulationModel(Model):
 
         self.schedule = RandomActivation(self)
 
-        creator_agent = CreatorAgent(0, self)
+        creator_agent = CreatorAgent(0, self, max_revenue)
 
         self.schedule.add(creator_agent)
 

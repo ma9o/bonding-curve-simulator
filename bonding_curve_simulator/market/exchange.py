@@ -18,7 +18,7 @@ class TaxConfig:
 
 
 @dataclass
-class ExchangeConfig:
+class WealthConfig:
     supply: float = 100.0
     reserve: float = 100.0
 
@@ -27,7 +27,7 @@ class Exchange:
     def __init__(
         self,
         bonding_curve: BondingCurve,
-        exchange_config: ExchangeConfig = ExchangeConfig(),
+        exchange_config: WealthConfig = WealthConfig(),
         tax_config: TaxConfig = TaxConfig(),
     ):
         self.bonding_curve = bonding_curve
