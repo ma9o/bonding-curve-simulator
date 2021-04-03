@@ -1,10 +1,8 @@
 """Main module."""
 
+from bonding_curve_simulator.market.exchange.exchange import Exchange
+from bonding_curve_simulator.market.exchange.types import ExchangeConfig
 from pydantic.main import BaseModel
-from bonding_curve_simulator.market.exchange import (
-    Exchange,
-    ExchangeConfig,
-)
 from bonding_curve_simulator.mesa.simulation_model import (
     SimulationModel,
     SimulationModelConfig,

@@ -1,15 +1,13 @@
 """Console script for bonding_curve_simulator."""
-from bonding_curve_simulator.market.growth_curves import CurveType
 import sys
 import click
-from funcy import compose
+import funcy
 import yaml
 from typing import Callable
 
 
 from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 from bonding_curve_simulator.helpers.outfile import with_outfile
-from bonding_curve_simulator.market.exchange import TaxType
 from bonding_curve_simulator.helpers.profiling import with_profiling
 from bonding_curve_simulator.bonding_curve_simulator import (
     SimulationConfig,
@@ -48,7 +46,7 @@ def main(
         ] = lambda model: with_profiling(lambda: run_simulation(model))
 
     if outfile:
-        entrypoint = compose(with_outfile, entrypoint)
+        entrypoint = funcy.compose(with_outfile, entrypoint)
 
     entrypoint(model)
 

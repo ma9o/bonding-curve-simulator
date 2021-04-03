@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable
+from typing import Any, Callable, Union
 import numpy as np
 from pydantic.main import BaseModel
 
@@ -17,11 +17,11 @@ class CurveParams(BaseModel):
 
 # https://en.wikipedia.org/wiki/Generalised_logistic_function
 class LogisticParams(CurveParams):
-    a = 0.0
+    # q = x0
+    # a = y0
     k = 1.0
     b = 3.0
     v = 0.5
-    q = 0.5
     c = 1.0
     m = 3.0
 
@@ -33,7 +33,7 @@ class ExponentialParams(CurveParams):
 
 class CurveConfig(BaseModel):
     curve_type: CurveType = CurveType.EXPONENTIAL
-    curve_params: CurveParams = ExponentialParams()
+    curve_params: Union[LogisticParams, ExponentialParams] = ExponentialParams()
 
 
 def exponential(params: ExponentialParams) -> Callable[[float], float]:
@@ -41,9 +41,9 @@ def exponential(params: ExponentialParams) -> Callable[[float], float]:
 
 
 def logistic(params: LogisticParams) -> Callable[[float], float]:
-    return lambda x: params.a + (
-        (params.k - params.a)
-        / (params.c + ((params.q * np.e) ** (-params.b * (x - params.m))))
+    return lambda x: params.y0 + (
+        (params.k - params.y0)
+        / (params.c + ((params.x0 * np.e) ** (-params.b * (x - params.m))))
         ** (1 / params.v)
     )
 

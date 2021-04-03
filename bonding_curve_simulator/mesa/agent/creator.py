@@ -1,5 +1,5 @@
 from __future__ import annotations
-from bonding_curve_simulator.mesa.simulation_model import SimulationModel
+from bonding_curve_simulator.market.exchange.types import WealthConfig
 from bonding_curve_simulator.market.growth_curves import (
     CurveConfig,
     curve_type_function,
@@ -7,12 +7,12 @@ from bonding_curve_simulator.market.growth_curves import (
 
 from typing import TYPE_CHECKING, cast
 
+if TYPE_CHECKING:
+    from bonding_curve_simulator.mesa.simulation_model import SimulationModel
+
+
 from mesa import Agent
 from pydantic.main import BaseModel
-
-
-if TYPE_CHECKING:
-    from bonding_curve_simulator.market.exchange import WealthConfig
 
 
 class CreatorAgentConfig(BaseModel):

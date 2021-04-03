@@ -1,18 +1,22 @@
 # Zero intelligence
 
 # https://github.com/abides-sim/abides/blob/master/agent/ZeroIntelligenceAgent.py
+from __future__ import annotations
 
+from bonding_curve_simulator.market.strategy.config import StrategyParams
+from bonding_curve_simulator.market.strategy.strategy import Strategy
+from typing import TYPE_CHECKING
 
-from bonding_curve_simulator.market.strategy import Strategy, StrategyParams
-from bonding_curve_simulator.mesa.agent.trader import TraderAgent
+if TYPE_CHECKING:
+    from bonding_curve_simulator.mesa.agent.trader import TraderAgent
 
 
 class ZIStrategy(Strategy):
     def __init__(self, params: StrategyParams = StrategyParams()):
-        self.config = params
+        self.params = params
 
         # The agent maintains two priors: r_t and sigma_t (value and error estimates).
-        self.r_t = self.config.r_bar
+        self.r_t = self.params.r_bar
         self.sigma_t = 0
 
         # The agent must track its previous wake time, so it knows how many time

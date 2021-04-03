@@ -1,52 +1,132 @@
 {
-    "title": "SimulationModelConfig",
+    "title": "SimulationConfig",
     "type": "object",
     "properties": {
-        "max_steps": {
-            "title": "Max Steps",
-            "default": 3650,
-            "type": "integer"
-        },
-        "agents": {
-            "title": "Agents",
-            "default": [
-                {
-                    "config": {
-                        "strategy_config": {
-                            "sigma_n": 1000,
-                            "r_bar": 100000,
-                            "kappa": 0.05,
-                            "sigma_s": 100000,
-                            "q_max": 10,
-                            "sigma_pv": 5000000,
-                            "R_min": 0,
-                            "R_max": 250,
-                            "eta": 1.0,
-                            "lambda_a": 0.005
+        "model_config": {
+            "title": "Model Config",
+            "default": {
+                "max_steps": 3650,
+                "agents": [
+                    {
+                        "curve_config": {
+                            "curve_type": "exponential",
+                            "curve_params": {
+                                "y0": 0.0,
+                                "x0": 0.0,
+                                "m": 0.0025,
+                                "n": 2.0
+                            }
                         },
-                        "wealth_config": { "supply": 100.0, "reserve": 100.0 },
-                        "growth_config": {
+                        "agent_config": {
+                            "strategy_config": {
+                                "strategy_type": "zi",
+                                "params": {
+                                    "sigma_n": 1000,
+                                    "r_bar": 100000,
+                                    "kappa": 0.05,
+                                    "sigma_s": 100000,
+                                    "q_max": 10,
+                                    "sigma_pv": 5000000,
+                                    "R_min": 0,
+                                    "R_max": 250,
+                                    "eta": 1.0,
+                                    "lambda_a": 0.005
+                                }
+                            },
+                            "wealth_config": {
+                                "supply": 100.0,
+                                "reserve": 100.0
+                            }
+                        }
+                    }
+                ],
+                "creator": {
+                    "wealth_config": { "supply": 100.0, "reserve": 100.0 },
+                    "curve_config": {
+                        "curve_type": "exponential",
+                        "curve_params": {
                             "y0": 0.0,
                             "x0": 0.0,
-                            "a": 0.0,
-                            "k": 1.0,
-                            "b": 3.0,
-                            "v": 0.5,
-                            "q": 0.5,
-                            "c": 1.0,
-                            "m": 3.0
+                            "m": 0.0025,
+                            "n": 2.0
                         }
-                    },
-                    "count": 100
+                    }
                 }
-            ],
-            "type": "array",
-            "items": { "$ref": "#/definitions/SimulationModelAgents" }
+            },
+            "allOf": [{ "$ref": "#/definitions/SimulationModelConfig" }]
+        },
+        "exchange_config": {
+            "title": "Exchange Config",
+            "default": {
+                "bonding_curve_config": {
+                    "curve_type": "exponential",
+                    "curve_params": {
+                        "y0": 0.0,
+                        "x0": 0.0,
+                        "m": 0.0025,
+                        "n": 2.0
+                    }
+                },
+                "wealth_config": { "supply": 100.0, "reserve": 100.0 },
+                "tax_config": { "tax_amount": 0.0, "tax_type": "relative" }
+            },
+            "allOf": [{ "$ref": "#/definitions/ExchangeConfig" }]
         }
     },
     "definitions": {
-        "StrategyConfig": {
-            "title": "StrategyConfig",
+        "CurveType": {
+            "title": "CurveType",
+            "description": "An enumeration.",
+            "enum": ["exponential", "logistic"]
+        },
+        "LogisticParams": {
+            "title": "LogisticParams",
+            "type": "object",
+            "properties": {
+                "y0": { "title": "Y0", "default": 0.0, "type": "number" },
+                "x0": { "title": "X0", "default": 0.0, "type": "number" },
+                "k": { "title": "K", "default": 1.0, "type": "number" },
+                "b": { "title": "B", "default": 3.0, "type": "number" },
+                "v": { "title": "V", "default": 0.5, "type": "number" },
+                "c": { "title": "C", "default": 1.0, "type": "number" },
+                "m": { "title": "M", "default": 3.0, "type": "number" }
+            }
+        },
+        "ExponentialParams": {
+            "title": "ExponentialParams",
+            "type": "object",
+            "properties": {
+                "y0": { "title": "Y0", "default": 0.0, "type": "number" },
+                "x0": { "title": "X0", "default": 0.0, "type": "number" },
+                "m": { "title": "M", "default": 0.0025, "type": "number" },
+                "n": { "title": "N", "default": 2.0, "type": "number" }
+            }
+        },
+        "CurveConfig": {
+            "title": "CurveConfig",
+            "type": "object",
+            "properties": {
+                "curve_type": {
+                    "default": "exponential",
+                    "allOf": [{ "$ref": "#/definitions/CurveType" }]
+                },
+                "curve_params": {
+                    "title": "Curve Params",
+                    "default": { "y0": 0.0, "x0": 0.0, "m": 0.0025, "n": 2.0 },
+                    "anyOf": [
+                        { "$ref": "#/definitions/LogisticParams" },
+                        { "$ref": "#/definitions/ExponentialParams" }
+                    ]
+                }
+            }
+        },
+        "StrategyType": {
+            "title": "StrategyType",
+            "description": "An enumeration.",
+            "enum": ["zi", "hbf", "qlearn", "value", "momentum"]
+        },
+        "StrategyParams": {
+            "title": "StrategyParams",
             "type": "object",
             "properties": {
                 "sigma_n": {
@@ -89,6 +169,32 @@
                 }
             }
         },
+        "StrategyConfig": {
+            "title": "StrategyConfig",
+            "type": "object",
+            "properties": {
+                "strategy_type": {
+                    "default": "zi",
+                    "allOf": [{ "$ref": "#/definitions/StrategyType" }]
+                },
+                "params": {
+                    "title": "Params",
+                    "default": {
+                        "sigma_n": 1000,
+                        "r_bar": 100000,
+                        "kappa": 0.05,
+                        "sigma_s": 100000,
+                        "q_max": 10,
+                        "sigma_pv": 5000000,
+                        "R_min": 0,
+                        "R_max": 250,
+                        "eta": 1.0,
+                        "lambda_a": 0.005
+                    },
+                    "allOf": [{ "$ref": "#/definitions/StrategyParams" }]
+                }
+            }
+        },
         "WealthConfig": {
             "title": "WealthConfig",
             "type": "object",
@@ -105,14 +211,6 @@
                 }
             }
         },
-        "CurveConfig": {
-            "title": "CurveConfig",
-            "type": "object",
-            "properties": {
-                "y0": { "title": "Y0", "default": 0.0, "type": "number" },
-                "x0": { "title": "X0", "default": 0.0, "type": "number" }
-            }
-        },
         "TraderAgentConfig": {
             "title": "TraderAgentConfig",
             "type": "object",
@@ -120,49 +218,8 @@
                 "strategy_config": {
                     "title": "Strategy Config",
                     "default": {
-                        "sigma_n": 1000,
-                        "r_bar": 100000,
-                        "kappa": 0.05,
-                        "sigma_s": 100000,
-                        "q_max": 10,
-                        "sigma_pv": 5000000,
-                        "R_min": 0,
-                        "R_max": 250,
-                        "eta": 1.0,
-                        "lambda_a": 0.005
-                    },
-                    "allOf": [{ "$ref": "#/definitions/StrategyConfig" }]
-                },
-                "wealth_config": {
-                    "title": "Wealth Config",
-                    "default": { "supply": 100.0, "reserve": 100.0 },
-                    "allOf": [{ "$ref": "#/definitions/WealthConfig" }]
-                },
-                "growth_config": {
-                    "title": "Growth Config",
-                    "default": {
-                        "y0": 0.0,
-                        "x0": 0.0,
-                        "a": 0.0,
-                        "k": 1.0,
-                        "b": 3.0,
-                        "v": 0.5,
-                        "q": 0.5,
-                        "c": 1.0,
-                        "m": 3.0
-                    },
-                    "allOf": [{ "$ref": "#/definitions/CurveConfig" }]
-                }
-            }
-        },
-        "SimulationModelAgents": {
-            "title": "SimulationModelAgents",
-            "type": "object",
-            "properties": {
-                "config": {
-                    "title": "Config",
-                    "default": {
-                        "strategy_config": {
+                        "strategy_type": "zi",
+                        "params": {
                             "sigma_n": 1000,
                             "r_bar": 100000,
                             "kappa": 0.05,
@@ -173,23 +230,195 @@
                             "R_max": 250,
                             "eta": 1.0,
                             "lambda_a": 0.005
-                        },
-                        "wealth_config": { "supply": 100.0, "reserve": 100.0 },
-                        "growth_config": {
-                            "y0": 0.0,
-                            "x0": 0.0,
-                            "a": 0.0,
-                            "k": 1.0,
-                            "b": 3.0,
-                            "v": 0.5,
-                            "q": 0.5,
-                            "c": 1.0,
-                            "m": 3.0
                         }
                     },
-                    "allOf": [{ "$ref": "#/definitions/TraderAgentConfig" }]
+                    "allOf": [{ "$ref": "#/definitions/StrategyConfig" }]
                 },
-                "count": { "title": "Count", "default": 100, "type": "integer" }
+                "wealth_config": {
+                    "title": "Wealth Config",
+                    "default": { "supply": 100.0, "reserve": 100.0 },
+                    "allOf": [{ "$ref": "#/definitions/WealthConfig" }]
+                }
+            }
+        },
+        "TraderAgentsConfig": {
+            "title": "TraderAgentsConfig",
+            "type": "object",
+            "properties": {
+                "curve_config": {
+                    "title": "Curve Config",
+                    "default": {
+                        "curve_type": "exponential",
+                        "curve_params": {
+                            "y0": 0.0,
+                            "x0": 0.0,
+                            "m": 0.0025,
+                            "n": 2.0
+                        }
+                    },
+                    "allOf": [{ "$ref": "#/definitions/CurveConfig" }]
+                },
+                "agent_config": {
+                    "title": "Agent Config",
+                    "default": {
+                        "strategy_config": {
+                            "strategy_type": "zi",
+                            "params": {
+                                "sigma_n": 1000,
+                                "r_bar": 100000,
+                                "kappa": 0.05,
+                                "sigma_s": 100000,
+                                "q_max": 10,
+                                "sigma_pv": 5000000,
+                                "R_min": 0,
+                                "R_max": 250,
+                                "eta": 1.0,
+                                "lambda_a": 0.005
+                            }
+                        },
+                        "wealth_config": { "supply": 100.0, "reserve": 100.0 }
+                    },
+                    "allOf": [{ "$ref": "#/definitions/TraderAgentConfig" }]
+                }
+            }
+        },
+        "CreatorAgentConfig": {
+            "title": "CreatorAgentConfig",
+            "type": "object",
+            "properties": {
+                "wealth_config": {
+                    "title": "Wealth Config",
+                    "default": { "supply": 100.0, "reserve": 100.0 },
+                    "allOf": [{ "$ref": "#/definitions/WealthConfig" }]
+                },
+                "curve_config": {
+                    "title": "Curve Config",
+                    "default": {
+                        "curve_type": "exponential",
+                        "curve_params": {
+                            "y0": 0.0,
+                            "x0": 0.0,
+                            "m": 0.0025,
+                            "n": 2.0
+                        }
+                    },
+                    "allOf": [{ "$ref": "#/definitions/CurveConfig" }]
+                }
+            }
+        },
+        "SimulationModelConfig": {
+            "title": "SimulationModelConfig",
+            "type": "object",
+            "properties": {
+                "max_steps": {
+                    "title": "Max Steps",
+                    "default": 3650,
+                    "type": "integer"
+                },
+                "agents": {
+                    "title": "Agents",
+                    "default": [
+                        {
+                            "curve_config": {
+                                "curve_type": "exponential",
+                                "curve_params": {
+                                    "y0": 0.0,
+                                    "x0": 0.0,
+                                    "m": 0.0025,
+                                    "n": 2.0
+                                }
+                            },
+                            "agent_config": {
+                                "strategy_config": {
+                                    "strategy_type": "zi",
+                                    "params": {
+                                        "sigma_n": 1000,
+                                        "r_bar": 100000,
+                                        "kappa": 0.05,
+                                        "sigma_s": 100000,
+                                        "q_max": 10,
+                                        "sigma_pv": 5000000,
+                                        "R_min": 0,
+                                        "R_max": 250,
+                                        "eta": 1.0,
+                                        "lambda_a": 0.005
+                                    }
+                                },
+                                "wealth_config": {
+                                    "supply": 100.0,
+                                    "reserve": 100.0
+                                }
+                            }
+                        }
+                    ],
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/TraderAgentsConfig" }
+                },
+                "creator": {
+                    "title": "Creator",
+                    "default": {
+                        "wealth_config": { "supply": 100.0, "reserve": 100.0 },
+                        "curve_config": {
+                            "curve_type": "exponential",
+                            "curve_params": {
+                                "y0": 0.0,
+                                "x0": 0.0,
+                                "m": 0.0025,
+                                "n": 2.0
+                            }
+                        }
+                    },
+                    "allOf": [{ "$ref": "#/definitions/CreatorAgentConfig" }]
+                }
+            }
+        },
+        "TaxType": {
+            "title": "TaxType",
+            "description": "An enumeration.",
+            "enum": ["relative", "absolute"]
+        },
+        "TaxConfig": {
+            "title": "TaxConfig",
+            "type": "object",
+            "properties": {
+                "tax_amount": {
+                    "title": "Tax Amount",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "tax_type": {
+                    "default": "relative",
+                    "allOf": [{ "$ref": "#/definitions/TaxType" }]
+                }
+            }
+        },
+        "ExchangeConfig": {
+            "title": "ExchangeConfig",
+            "type": "object",
+            "properties": {
+                "bonding_curve_config": {
+                    "title": "Bonding Curve Config",
+                    "default": {
+                        "curve_type": "exponential",
+                        "curve_params": {
+                            "y0": 0.0,
+                            "x0": 0.0,
+                            "m": 0.0025,
+                            "n": 2.0
+                        }
+                    },
+                    "allOf": [{ "$ref": "#/definitions/CurveConfig" }]
+                },
+                "wealth_config": {
+                    "title": "Wealth Config",
+                    "default": { "supply": 100.0, "reserve": 100.0 },
+                    "allOf": [{ "$ref": "#/definitions/WealthConfig" }]
+                },
+                "tax_config": {
+                    "title": "Tax Config",
+                    "default": { "tax_amount": 0.0, "tax_type": "relative" },
+                    "allOf": [{ "$ref": "#/definitions/TaxConfig" }]
+                }
             }
         }
     }

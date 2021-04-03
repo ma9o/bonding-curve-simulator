@@ -1,15 +1,20 @@
 from __future__ import annotations
+from bonding_curve_simulator.market.exchange.types import WealthConfig
+from bonding_curve_simulator.market.strategy.types import (
+    StrategyConfig,
+)
+
+from bonding_curve_simulator.market.strategy.types import strategy_type_class
 
 from pydantic.main import BaseModel
-from bonding_curve_simulator.market.strategy import StrategyConfig, strategy_type_class
 
 from mesa import Agent
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from bonding_curve_simulator.mesa.simulation_model import SimulationModel
-    from bonding_curve_simulator.market.exchange import WealthConfig
 
 
 class TraderAgentConfig(BaseModel):

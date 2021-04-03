@@ -1,9 +1,8 @@
-from bonding_curve_simulator.market.strategy import StrategyConfig
+from bonding_curve_simulator.market.exchange.exchange import Exchange
 from bonding_curve_simulator.mesa.agent.trader import TraderAgent, TraderAgentConfig
 from bonding_curve_simulator.mesa.agent.creator import CreatorAgent, CreatorAgentConfig
 from bonding_curve_simulator.market.growth_curves import CurveConfig
 from typing import Callable, List, Tuple
-from bonding_curve_simulator.market.exchange import Exchange, WealthConfig
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.datacollection import DataCollector

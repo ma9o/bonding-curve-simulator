@@ -1,31 +1,53 @@
-exchange:
-  wealth:
-    supply: 100.0
-    reserve: 100.0
-  tax:
-    type: relative
-    amount: 0.02
-  bonding_curve:
-    type: logistic
-    config:
-      a: 123
-      b: 324
-
-model:
-  max_steps: 1000
+exchange_config:
+  bonding_curve_config:
+    curve_type: exponential
+    curve_params:
+      y0: 0
+      x0: 0
+      m: 0.0025
+      n: 2
+      efsdf: 2
+  wealth_config:
+    supply: 100
+    reserve: 100
+  tax_config:
+    tax_amount: 0
+    tax_type: relative
+model_config:
+  max_steps: 3650
+  agents:
+    - agent_config:
+        strategy_config:
+          strategy_type: zi
+          params:
+            sigma_n: 1000
+            r_bar: 100000
+            kappa: 0.05
+            sigma_s: 100000
+            q_max: 10
+            sigma_pv: 5000000
+            R_min: 0
+            R_max: 250
+            eta: 1
+            lambda_a: 0.005
+        wealth_config:
+          supply: 100
+          reserve: 100
+      curve_config:
+        curve_type: exponential
+        curve_params:
+          y0: 0
+          x0: 0
+          m: 0.0025
+          n: 2
   creator:
-    target_revenue: 123
-    growth_curve:
-      type: logistic
-      config:
-        a: 123
-        b: 324
-  traders:
-    - type: zero_intelligence
-      count: 100
-      wealth:
-        supply: 100.0
-        reserve: 100.0
-      config:
-        a: 213
-        b: 324
+    wealth_config:
+      supply: 100
+      reserve: 100
+    curve_config:
+      curve_type: logistic
+      curve_params:
+        y0: 0
+        x0: 0
+        m: 0.0025
+        n: 2
