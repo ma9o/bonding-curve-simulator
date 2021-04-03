@@ -3,6 +3,7 @@ from bonding_curve_simulator.market.growth_curves import CurveType
 import sys
 import click
 from funcy import compose
+import yaml
 from typing import Callable
 
 
@@ -10,48 +11,14 @@ from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 from bonding_curve_simulator.helpers.outfile import with_outfile
 from bonding_curve_simulator.market.exchange import TaxType
 from bonding_curve_simulator.helpers.profiling import with_profiling
-from bonding_curve_simulator.bonding_curve_simulator import init_model, run_simulation
+from bonding_curve_simulator.bonding_curve_simulator import (
+    SimulationConfig,
+    init_model,
+    run_simulation,
+)
 
 
 @click.command()
-@click.option(
-    "--curve-type",
-    default=CurveType.EXPONENTIAL.value,
-    show_default=True,
-    type=click.Choice([e.value for e in CurveType]),
-)
-@click.option("--initial-supply", show_default=True, type=click.FLOAT, default=100.0)
-@click.option("--initial-reserve", show_default=True, type=click.FLOAT, default=100.0)
-@click.option(
-    "--tax-type",
-    show_default=True,
-    type=click.Choice([e.value for e in TaxType]),
-    default=TaxType.RELATIVE.value,
-)
-@click.option(
-    "--tax-amount",
-    show_default=True,
-    type=click.FLOAT,
-    default=0.0,
-)
-@click.option(
-    "--max-steps",
-    show_default=True,
-    type=click.INT,
-    default=(365 * 10),
-)
-@click.option(
-    "--max-agents",
-    show_default=True,
-    type=click.INT,
-    default=100,
-)
-@click.option(
-    "--max-revenue",
-    show_default=True,
-    type=click.FLOAT,
-    default=100.0,
-)
 @click.option(
     "--profile",
     help="Get cProfile information.",
@@ -62,32 +29,16 @@ from bonding_curve_simulator.bonding_curve_simulator import init_model, run_simu
     help="Save datacollector results.",
     is_flag=True,
 )
-@click.argument("curve-config", nargs=-1)
+@click.argument("config-file", type=click.File("rb"), nargs=1)
 def main(
-    curve_type,
-    initial_supply,
-    initial_reserve,
-    tax_type,
-    tax_amount,
-    max_steps,
-    max_agents,
-    max_revenue,
     profile,
     outfile,
-    curve_config,
+    config_file,
 ):
 
-    model = init_model(
-        CurveType(curve_type),
-        dict(curve_config),
-        initial_supply,
-        initial_reserve,
-        TaxType(tax_type),
-        tax_amount,
-        max_steps,
-        max_agents,
-        max_revenue,
-    )
+    config = yaml.full_load(config_file)
+
+    model = init_model(SimulationConfig(**config))
 
     entrypoint = run_simulation
 

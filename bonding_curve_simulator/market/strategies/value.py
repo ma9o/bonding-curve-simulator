@@ -2,13 +2,13 @@
 
 from bonding_curve_simulator.mesa.agent.trader import TraderAgent
 from bonding_curve_simulator.market.trading_strategy import (
-    TradingStrategy,
-    TradingStrategyConfig,
+    Strategy,
+    StrategyConfig,
 )
 
 
-class ValueStrategy(TradingStrategy):
-    def __init__(self, config: TradingStrategyConfig):
+class ValueStrategy(Strategy):
+    def __init__(self, config: StrategyConfig):
         self.config = config
 
     def execute(self, agent: TraderAgent):

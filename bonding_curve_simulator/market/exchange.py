@@ -1,9 +1,10 @@
-from bonding_curve_simulator.mesa.agents.trader import TraderAgent
-from typing import Dict
-from bonding_curve_simulator.mesa.agents.creator import CreatorAgent
+from bonding_curve_simulator.market.growth_curves import CurveConfig
+from pydantic.main import BaseModel
 from bonding_curve_simulator.market.bonding_curve import BondingCurve
 from enum import Enum
 from dataclasses import dataclass
+from bonding_curve_simulator.mesa.agent.trader import TraderAgent
+from bonding_curve_simulator.mesa.agent.creator import CreatorAgent
 
 
 class TaxType(Enum):
@@ -11,31 +12,29 @@ class TaxType(Enum):
     ABSOLUTE = "absolute"
 
 
-@dataclass
-class TaxConfig:
-    tax_amount: float = 0.0
-    tax_type: TaxType = TaxType.RELATIVE
+class TaxConfig(BaseModel):
+    tax_amount = 0.0
+    tax_type = TaxType.RELATIVE
 
 
-@dataclass
-class WealthConfig:
-    supply: float = 100.0
-    reserve: float = 100.0
+class WealthConfig(BaseModel):
+    supply = 100.0
+    reserve = 100.0
+
+
+class ExchangeConfig(BaseModel):
+    bonding_curve_config: CurveConfig = CurveConfig()
+    wealth_config: WealthConfig = WealthConfig()
+    tax_config: TaxConfig = TaxConfig()
 
 
 class Exchange:
-    def __init__(
-        self,
-        bonding_curve: BondingCurve,
-        exchange_config: WealthConfig = WealthConfig(),
-        tax_config: TaxConfig = TaxConfig(),
-    ):
-        self.bonding_curve = bonding_curve
-
-        self.supply = exchange_config.supply
-        self.reserve = exchange_config.reserve
-        self.tax_amount = tax_config.tax_amount
-        self.tax_type = tax_config.tax_type
+    def __init__(self, config: ExchangeConfig = ExchangeConfig()):
+        self.supply = config.wealth_config.supply
+        self.reserve = config.wealth_config.reserve
+        self.tax_amount = config.tax_config.tax_amount
+        self.tax_type = config.tax_config.tax_type
+        self.bonding_curve = BondingCurve(config.bonding_curve_config)
 
     def set_creator(self, creator: CreatorAgent):
         self.creator = creator

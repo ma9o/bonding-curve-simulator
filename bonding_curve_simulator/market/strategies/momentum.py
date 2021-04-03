@@ -2,7 +2,7 @@
 
 from bonding_curve_simulator.mesa.agent.trader import TraderAgent
 from dataclasses import dataclass
-from bonding_curve_simulator.market.trading_strategy import TradingStrategy
+from bonding_curve_simulator.market.trading_strategy import Strategy
 
 
 @dataclass
@@ -11,7 +11,7 @@ class MomentumStrategyconfig:
     max_size = 100
 
 
-class MomentumStrategy(TradingStrategy):
+class MomentumStrategy(Strategy):
     def __init__(self, config: MomentumStrategyconfig) -> None:
         self.config = config
 

@@ -1,498 +1,196 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "http://example.com/example.json",
+    "title": "SimulationModelConfig",
     "type": "object",
-    "title": "The root schema",
-    "description": "The root schema comprises the entire JSON document.",
-    "default": {},
-    "examples": [
-        {
-            "exchange": {
-                "wealth": {
-                    "supply": 100,
-                    "reserve": 100
-                },
-                "tax": {
-                    "type": "relative",
-                    "amount": 0.02
-                },
-                "bonding_curve": {
-                    "type": "logistic",
-                    "config": {
-                        "a": 123,
-                        "b": 324
-                    }
-                }
-            },
-            "model": {
-                "max_steps": 1000,
-                "creator": {
-                    "target_revenue": 123,
-                    "growth_curve": {
-                        "type": "logistic",
-                        "config": {
-                            "a": 123,
-                            "b": 324
-                        }
-                    }
-                },
-                "traders": [
-                    {
-                        "type": "zero_intelligence",
-                        "count": 100,
-                        "wealth": {
-                            "supply": 100,
-                            "reserve": 100
-                        },
-                        "config": {
-                            "a": 213,
-                            "b": 324
-                        }
-                    }
-                ]
-            }
-        }
-    ],
-    "required": ["exchange", "model"],
     "properties": {
-        "exchange": {
-            "$id": "#/properties/exchange",
-            "type": "object",
-            "title": "The exchange schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": {},
-            "examples": [
-                {
-                    "wealth": {
-                        "supply": 100,
-                        "reserve": 100
-                    },
-                    "tax": {
-                        "type": "relative",
-                        "amount": 0.02
-                    },
-                    "bonding_curve": {
-                        "type": "logistic",
-                        "config": {
-                            "a": 123,
-                            "b": 324
-                        }
-                    }
-                }
-            ],
-            "required": ["wealth", "tax", "bonding_curve"],
-            "properties": {
-                "wealth": {
-                    "$id": "#/properties/exchange/properties/wealth",
-                    "type": "object",
-                    "title": "The wealth schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": {},
-                    "examples": [
-                        {
-                            "supply": 100,
-                            "reserve": 100
-                        }
-                    ],
-                    "required": ["supply", "reserve"],
-                    "properties": {
-                        "supply": {
-                            "$id": "#/properties/exchange/properties/wealth/properties/supply",
-                            "type": "integer",
-                            "title": "The supply schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": 0,
-                            "examples": [100]
-                        },
-                        "reserve": {
-                            "$id": "#/properties/exchange/properties/wealth/properties/reserve",
-                            "type": "integer",
-                            "title": "The reserve schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": 0,
-                            "examples": [100]
-                        }
-                    },
-                    "additionalProperties": true
-                },
-                "tax": {
-                    "$id": "#/properties/exchange/properties/tax",
-                    "type": "object",
-                    "title": "The tax schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": {},
-                    "examples": [
-                        {
-                            "type": "relative",
-                            "amount": 0.02
-                        }
-                    ],
-                    "required": ["type", "amount"],
-                    "properties": {
-                        "type": {
-                            "$id": "#/properties/exchange/properties/tax/properties/type",
-                            "type": "string",
-                            "title": "The type schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": "",
-                            "examples": ["relative"]
-                        },
-                        "amount": {
-                            "$id": "#/properties/exchange/properties/tax/properties/amount",
-                            "type": "number",
-                            "title": "The amount schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": 0.0,
-                            "examples": [0.02]
-                        }
-                    },
-                    "additionalProperties": true
-                },
-                "bonding_curve": {
-                    "$id": "#/properties/exchange/properties/bonding_curve",
-                    "type": "object",
-                    "title": "The bonding_curve schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": {},
-                    "examples": [
-                        {
-                            "type": "logistic",
-                            "config": {
-                                "a": 123,
-                                "b": 324
-                            }
-                        }
-                    ],
-                    "required": ["type", "config"],
-                    "properties": {
-                        "type": {
-                            "$id": "#/properties/exchange/properties/bonding_curve/properties/type",
-                            "type": "string",
-                            "title": "The type schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": "",
-                            "examples": ["logistic"]
-                        },
-                        "config": {
-                            "$id": "#/properties/exchange/properties/bonding_curve/properties/config",
-                            "type": "object",
-                            "title": "The config schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": {},
-                            "examples": [
-                                {
-                                    "a": 123,
-                                    "b": 324
-                                }
-                            ],
-                            "required": ["a", "b"],
-                            "properties": {
-                                "a": {
-                                    "$id": "#/properties/exchange/properties/bonding_curve/properties/config/properties/a",
-                                    "type": "integer",
-                                    "title": "The a schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": 0,
-                                    "examples": [123]
-                                },
-                                "b": {
-                                    "$id": "#/properties/exchange/properties/bonding_curve/properties/config/properties/b",
-                                    "type": "integer",
-                                    "title": "The b schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": 0,
-                                    "examples": [324]
-                                }
-                            },
-                            "additionalProperties": true
-                        }
-                    },
-                    "additionalProperties": true
-                }
-            },
-            "additionalProperties": true
+        "max_steps": {
+            "title": "Max Steps",
+            "default": 3650,
+            "type": "integer"
         },
-        "model": {
-            "$id": "#/properties/model",
-            "type": "object",
-            "title": "The model schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": {},
-            "examples": [
+        "agents": {
+            "title": "Agents",
+            "default": [
                 {
-                    "max_steps": 1000,
-                    "creator": {
-                        "target_revenue": 123,
-                        "growth_curve": {
-                            "type": "logistic",
-                            "config": {
-                                "a": 123,
-                                "b": 324
-                            }
+                    "config": {
+                        "strategy_config": {
+                            "sigma_n": 1000,
+                            "r_bar": 100000,
+                            "kappa": 0.05,
+                            "sigma_s": 100000,
+                            "q_max": 10,
+                            "sigma_pv": 5000000,
+                            "R_min": 0,
+                            "R_max": 250,
+                            "eta": 1.0,
+                            "lambda_a": 0.005
+                        },
+                        "wealth_config": { "supply": 100.0, "reserve": 100.0 },
+                        "growth_config": {
+                            "y0": 0.0,
+                            "x0": 0.0,
+                            "a": 0.0,
+                            "k": 1.0,
+                            "b": 3.0,
+                            "v": 0.5,
+                            "q": 0.5,
+                            "c": 1.0,
+                            "m": 3.0
                         }
                     },
-                    "traders": [
-                        {
-                            "type": "zero_intelligence",
-                            "count": 100,
-                            "wealth": {
-                                "supply": 100,
-                                "reserve": 100
-                            },
-                            "config": {
-                                "a": 213,
-                                "b": 324
-                            }
-                        }
-                    ]
+                    "count": 100
                 }
             ],
-            "required": ["max_steps", "creator", "traders"],
-            "properties": {
-                "max_steps": {
-                    "$id": "#/properties/model/properties/max_steps",
-                    "type": "integer",
-                    "title": "The max_steps schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": 0,
-                    "examples": [1000]
-                },
-                "creator": {
-                    "$id": "#/properties/model/properties/creator",
-                    "type": "object",
-                    "title": "The creator schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": {},
-                    "examples": [
-                        {
-                            "target_revenue": 123,
-                            "growth_curve": {
-                                "type": "logistic",
-                                "config": {
-                                    "a": 123,
-                                    "b": 324
-                                }
-                            }
-                        }
-                    ],
-                    "required": ["target_revenue", "growth_curve"],
-                    "properties": {
-                        "target_revenue": {
-                            "$id": "#/properties/model/properties/creator/properties/target_revenue",
-                            "type": "integer",
-                            "title": "The target_revenue schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": 0,
-                            "examples": [123]
-                        },
-                        "growth_curve": {
-                            "$id": "#/properties/model/properties/creator/properties/growth_curve",
-                            "type": "object",
-                            "title": "The growth_curve schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": {},
-                            "examples": [
-                                {
-                                    "type": "logistic",
-                                    "config": {
-                                        "a": 123,
-                                        "b": 324
-                                    }
-                                }
-                            ],
-                            "required": ["type", "config"],
-                            "properties": {
-                                "type": {
-                                    "$id": "#/properties/model/properties/creator/properties/growth_curve/properties/type",
-                                    "type": "string",
-                                    "title": "The type schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": "",
-                                    "examples": ["logistic"]
-                                },
-                                "config": {
-                                    "$id": "#/properties/model/properties/creator/properties/growth_curve/properties/config",
-                                    "type": "object",
-                                    "title": "The config schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": {},
-                                    "examples": [
-                                        {
-                                            "a": 123,
-                                            "b": 324
-                                        }
-                                    ],
-                                    "required": ["a", "b"],
-                                    "properties": {
-                                        "a": {
-                                            "$id": "#/properties/model/properties/creator/properties/growth_curve/properties/config/properties/a",
-                                            "type": "integer",
-                                            "title": "The a schema",
-                                            "description": "An explanation about the purpose of this instance.",
-                                            "default": 0,
-                                            "examples": [123]
-                                        },
-                                        "b": {
-                                            "$id": "#/properties/model/properties/creator/properties/growth_curve/properties/config/properties/b",
-                                            "type": "integer",
-                                            "title": "The b schema",
-                                            "description": "An explanation about the purpose of this instance.",
-                                            "default": 0,
-                                            "examples": [324]
-                                        }
-                                    },
-                                    "additionalProperties": true
-                                }
-                            },
-                            "additionalProperties": true
-                        }
-                    },
-                    "additionalProperties": true
-                },
-                "traders": {
-                    "$id": "#/properties/model/properties/traders",
-                    "type": "array",
-                    "title": "The traders schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": [],
-                    "examples": [
-                        [
-                            {
-                                "type": "zero_intelligence",
-                                "count": 100,
-                                "wealth": {
-                                    "supply": 100,
-                                    "reserve": 100
-                                },
-                                "config": {
-                                    "a": 213,
-                                    "b": 324
-                                }
-                            }
-                        ]
-                    ],
-                    "additionalItems": true,
-                    "items": {
-                        "$id": "#/properties/model/properties/traders/items",
-                        "anyOf": [
-                            {
-                                "$id": "#/properties/model/properties/traders/items/anyOf/0",
-                                "type": "object",
-                                "title": "The first anyOf schema",
-                                "description": "An explanation about the purpose of this instance.",
-                                "default": {},
-                                "examples": [
-                                    {
-                                        "type": "zero_intelligence",
-                                        "count": 100,
-                                        "wealth": {
-                                            "supply": 100,
-                                            "reserve": 100
-                                        },
-                                        "config": {
-                                            "a": 213,
-                                            "b": 324
-                                        }
-                                    }
-                                ],
-                                "required": [
-                                    "type",
-                                    "count",
-                                    "wealth",
-                                    "config"
-                                ],
-                                "properties": {
-                                    "type": {
-                                        "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/type",
-                                        "type": "string",
-                                        "title": "The type schema",
-                                        "description": "An explanation about the purpose of this instance.",
-                                        "default": "",
-                                        "examples": ["zero_intelligence"]
-                                    },
-                                    "count": {
-                                        "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/count",
-                                        "type": "integer",
-                                        "title": "The count schema",
-                                        "description": "An explanation about the purpose of this instance.",
-                                        "default": 0,
-                                        "examples": [100]
-                                    },
-                                    "wealth": {
-                                        "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/wealth",
-                                        "type": "object",
-                                        "title": "The wealth schema",
-                                        "description": "An explanation about the purpose of this instance.",
-                                        "default": {},
-                                        "examples": [
-                                            {
-                                                "supply": 100,
-                                                "reserve": 100
-                                            }
-                                        ],
-                                        "required": ["supply", "reserve"],
-                                        "properties": {
-                                            "supply": {
-                                                "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/wealth/properties/supply",
-                                                "type": "integer",
-                                                "title": "The supply schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": 0,
-                                                "examples": [100]
-                                            },
-                                            "reserve": {
-                                                "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/wealth/properties/reserve",
-                                                "type": "integer",
-                                                "title": "The reserve schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": 0,
-                                                "examples": [100]
-                                            }
-                                        },
-                                        "additionalProperties": true
-                                    },
-                                    "config": {
-                                        "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/config",
-                                        "type": "object",
-                                        "title": "The config schema",
-                                        "description": "An explanation about the purpose of this instance.",
-                                        "default": {},
-                                        "examples": [
-                                            {
-                                                "a": 213,
-                                                "b": 324
-                                            }
-                                        ],
-                                        "required": ["a", "b"],
-                                        "properties": {
-                                            "a": {
-                                                "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/config/properties/a",
-                                                "type": "integer",
-                                                "title": "The a schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": 0,
-                                                "examples": [213]
-                                            },
-                                            "b": {
-                                                "$id": "#/properties/model/properties/traders/items/anyOf/0/properties/config/properties/b",
-                                                "type": "integer",
-                                                "title": "The b schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": 0,
-                                                "examples": [324]
-                                            }
-                                        },
-                                        "additionalProperties": true
-                                    }
-                                },
-                                "additionalProperties": true
-                            }
-                        ]
-                    }
-                }
-            },
-            "additionalProperties": true
+            "type": "array",
+            "items": { "$ref": "#/definitions/SimulationModelAgents" }
         }
     },
-    "additionalProperties": true
+    "definitions": {
+        "StrategyConfig": {
+            "title": "StrategyConfig",
+            "type": "object",
+            "properties": {
+                "sigma_n": {
+                    "title": "Sigma N",
+                    "default": 1000,
+                    "type": "integer"
+                },
+                "r_bar": {
+                    "title": "R Bar",
+                    "default": 100000,
+                    "type": "integer"
+                },
+                "kappa": {
+                    "title": "Kappa",
+                    "default": 0.05,
+                    "type": "number"
+                },
+                "sigma_s": {
+                    "title": "Sigma S",
+                    "default": 100000,
+                    "type": "integer"
+                },
+                "q_max": { "title": "Q Max", "default": 10, "type": "integer" },
+                "sigma_pv": {
+                    "title": "Sigma Pv",
+                    "default": 5000000,
+                    "type": "integer"
+                },
+                "R_min": { "title": "R Min", "default": 0, "type": "integer" },
+                "R_max": {
+                    "title": "R Max",
+                    "default": 250,
+                    "type": "integer"
+                },
+                "eta": { "title": "Eta", "default": 1.0, "type": "number" },
+                "lambda_a": {
+                    "title": "Lambda A",
+                    "default": 0.005,
+                    "type": "number"
+                }
+            }
+        },
+        "WealthConfig": {
+            "title": "WealthConfig",
+            "type": "object",
+            "properties": {
+                "supply": {
+                    "title": "Supply",
+                    "default": 100.0,
+                    "type": "number"
+                },
+                "reserve": {
+                    "title": "Reserve",
+                    "default": 100.0,
+                    "type": "number"
+                }
+            }
+        },
+        "CurveConfig": {
+            "title": "CurveConfig",
+            "type": "object",
+            "properties": {
+                "y0": { "title": "Y0", "default": 0.0, "type": "number" },
+                "x0": { "title": "X0", "default": 0.0, "type": "number" }
+            }
+        },
+        "TraderAgentConfig": {
+            "title": "TraderAgentConfig",
+            "type": "object",
+            "properties": {
+                "strategy_config": {
+                    "title": "Strategy Config",
+                    "default": {
+                        "sigma_n": 1000,
+                        "r_bar": 100000,
+                        "kappa": 0.05,
+                        "sigma_s": 100000,
+                        "q_max": 10,
+                        "sigma_pv": 5000000,
+                        "R_min": 0,
+                        "R_max": 250,
+                        "eta": 1.0,
+                        "lambda_a": 0.005
+                    },
+                    "allOf": [{ "$ref": "#/definitions/StrategyConfig" }]
+                },
+                "wealth_config": {
+                    "title": "Wealth Config",
+                    "default": { "supply": 100.0, "reserve": 100.0 },
+                    "allOf": [{ "$ref": "#/definitions/WealthConfig" }]
+                },
+                "growth_config": {
+                    "title": "Growth Config",
+                    "default": {
+                        "y0": 0.0,
+                        "x0": 0.0,
+                        "a": 0.0,
+                        "k": 1.0,
+                        "b": 3.0,
+                        "v": 0.5,
+                        "q": 0.5,
+                        "c": 1.0,
+                        "m": 3.0
+                    },
+                    "allOf": [{ "$ref": "#/definitions/CurveConfig" }]
+                }
+            }
+        },
+        "SimulationModelAgents": {
+            "title": "SimulationModelAgents",
+            "type": "object",
+            "properties": {
+                "config": {
+                    "title": "Config",
+                    "default": {
+                        "strategy_config": {
+                            "sigma_n": 1000,
+                            "r_bar": 100000,
+                            "kappa": 0.05,
+                            "sigma_s": 100000,
+                            "q_max": 10,
+                            "sigma_pv": 5000000,
+                            "R_min": 0,
+                            "R_max": 250,
+                            "eta": 1.0,
+                            "lambda_a": 0.005
+                        },
+                        "wealth_config": { "supply": 100.0, "reserve": 100.0 },
+                        "growth_config": {
+                            "y0": 0.0,
+                            "x0": 0.0,
+                            "a": 0.0,
+                            "k": 1.0,
+                            "b": 3.0,
+                            "v": 0.5,
+                            "q": 0.5,
+                            "c": 1.0,
+                            "m": 3.0
+                        }
+                    },
+                    "allOf": [{ "$ref": "#/definitions/TraderAgentConfig" }]
+                },
+                "count": { "title": "Count", "default": 100, "type": "integer" }
+            }
+        }
+    }
 }

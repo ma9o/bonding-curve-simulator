@@ -1,23 +1,16 @@
-from bonding_curve_simulator.market.growth_curves import (
-    ExponentialConfig,
-    LogisticConfig,
-    exponential,
-    logistic,
-)
-from typing import Dict, Tuple, Union
 import scipy.integrate as integrate
 from scipy.optimize import fsolve
-import numpy as np
+from bonding_curve_simulator.market.growth_curves import (
+    CurveConfig,
+    curve_type_function,
+)
 
 
 class BondingCurve:
-    def __init__(self, config: Union[LogisticConfig, ExponentialConfig]):
-
-        if isinstance(config, LogisticConfig):
-            self.bonding_formula = logistic(config)
-
-        if isinstance(config, ExponentialConfig):
-            self.bonding_formula = exponential(config)
+    def __init__(self, config: CurveConfig = CurveConfig()):
+        self.bonding_formula = curve_type_function[config.curve_type](
+            config.curve_params
+        )
 
     def current_price(self, supply) -> float:
         return self.bonding_formula(supply)

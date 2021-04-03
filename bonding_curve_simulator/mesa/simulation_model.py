@@ -1,23 +1,45 @@
-from bonding_curve_simulator.market.exchange import Exchange
-from bonding_curve_simulator.mesa.agents.creator import CreatorAgent
-from bonding_curve_simulator.mesa.agents.trader import TraderAgent
+from bonding_curve_simulator.market.strategy import StrategyConfig
+from bonding_curve_simulator.mesa.agent.trader import TraderAgent, TraderAgentConfig
+from bonding_curve_simulator.mesa.agent.creator import CreatorAgent, CreatorAgentConfig
+from bonding_curve_simulator.market.growth_curves import CurveConfig
+from typing import Callable, List, Tuple
+from bonding_curve_simulator.market.exchange import Exchange, WealthConfig
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.datacollection import DataCollector
+from math import floor
+from pydantic import BaseModel
+from bonding_curve_simulator.market.growth_curves import (
+    CurveConfig,
+    curve_type_function,
+)
+import uuid
+
+
+class TraderAgentsConfig(BaseModel):
+    curve_config: CurveConfig = CurveConfig()
+    agent_config: TraderAgentConfig = TraderAgentConfig()
+
+
+class SimulationModelConfig(BaseModel):
+    max_steps: int = 365 * 10
+    agents: List[TraderAgentsConfig] = [TraderAgentsConfig()]
+    creator: CreatorAgentConfig = CreatorAgentConfig()
 
 
 class SimulationModel(Model):
     def __init__(
-        self, exchange: Exchange, max_steps=3650, num_agents=100, max_revenue=100.0
+        self,
+        exchange: Exchange,
+        config: SimulationModelConfig = SimulationModelConfig(),
     ):
         super().__init__()
 
-        self.max_steps = max_steps
-        self.num_agents = num_agents
+        self.max_steps = config.max_steps
 
         self.schedule = RandomActivation(self)
 
-        creator_agent = CreatorAgent(0, self, max_revenue)
+        creator_agent = CreatorAgent(uuid.uuid4(), self, config.creator)
 
         self.schedule.add(creator_agent)
 
@@ -25,20 +47,55 @@ class SimulationModel(Model):
 
         self.exchange.set_creator(creator_agent)
 
-        for i in range(1, self.num_agents):
-            a = TraderAgent(i, self)
-            self.schedule.add(a)
+        self.agent_config_growth: List[
+            Tuple[int, Callable[[float], float], TraderAgentConfig]
+        ] = []
+
+        for c in config.agents:
+            agent_growth = curve_type_function[c.curve_config.curve_type](
+                c.curve_config.curve_params
+            )
+            n_initial_agents = int(agent_growth(0))
+
+            for _ in range(n_initial_agents):
+                a = TraderAgent(uuid.uuid4(), self, c.agent_config)
+                self.schedule.add(a)
+
+            self.agent_config_growth.append(
+                (
+                    n_initial_agents,
+                    agent_growth,
+                    c.agent_config,
+                )
+            )
 
         self.datacollector = DataCollector(
             model_reporters={
                 "Price": self.exchange.current_price,
-                "Supply": lambda x: self.exchange.supply,
-                "Reserve": lambda x: self.exchange.reserve,
+                "Supply": lambda: self.exchange.supply,
+                "Reserve": lambda: self.exchange.reserve,
             },
             agent_reporters={"Supply": "supply", "Reserve": "reserve"},
         )
 
+    def __agent_arrival__(self):
+        size = len(self.agent_config_growth)
+        for _ in range(size):
+            initial, growth, config = self.agent_config_growth.pop()
+
+            i = initial
+            for i in range(
+                initial,
+                floor(growth(self.schedule.steps)),
+            ):
+                a = TraderAgent(uuid.uuid4(), self, config)
+                self.schedule.add(a)
+
+            self.agent_config_growth.insert(0, (i, growth, config))
+
     def step(self):
+        self.__agent_arrival__()
+
         self.datacollector.collect(self)
 
         if self.schedule.steps > self.max_steps:
