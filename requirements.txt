@@ -2,3 +2,4 @@ mesa==0.8.8.1
 scipy==1.6.2
 funcy==1.15
 pydantic==1.8.1
+devtools==0.6.1

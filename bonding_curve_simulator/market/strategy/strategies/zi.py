@@ -1,6 +1,12 @@
 # Zero intelligence
 
 # https://github.com/abides-sim/abides/blob/master/agent/ZeroIntelligenceAgent.py
+
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC548562/#__sec4title
+
+# It suggests that institutions strongly shape our behavior, so that some of the properties of markets may depend 
+# more on the structure of institutions than on the rationality of individuals.
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
