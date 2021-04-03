@@ -2,9 +2,10 @@
 
 # https://github.com/abides-sim/abides/blob/master/agent/HeuristicBeliefLearningAgent.py
 from __future__ import annotations
-from bonding_curve_simulator.market.strategy.config import StrategyParams
+
 from typing import TYPE_CHECKING
 
+from bonding_curve_simulator.market.strategy.config import StrategyParams
 from bonding_curve_simulator.market.strategy.strategy import Strategy
 
 if TYPE_CHECKING:

@@ -1,8 +1,9 @@
-from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 import cProfile
-from pstats import SortKey, Stats
 from io import StringIO
+from pstats import SortKey, Stats
 from typing import Callable
+
+from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 
 
 def with_profiling(run_simulation: Callable) -> SimulationModel:

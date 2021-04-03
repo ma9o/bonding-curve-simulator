@@ -79,19 +79,6 @@
             "description": "An enumeration.",
             "enum": ["exponential", "logistic"]
         },
-        "LogisticParams": {
-            "title": "LogisticParams",
-            "type": "object",
-            "properties": {
-                "y0": { "title": "Y0", "default": 0.0, "type": "number" },
-                "x0": { "title": "X0", "default": 0.0, "type": "number" },
-                "k": { "title": "K", "default": 1.0, "type": "number" },
-                "b": { "title": "B", "default": 3.0, "type": "number" },
-                "v": { "title": "V", "default": 0.5, "type": "number" },
-                "c": { "title": "C", "default": 1.0, "type": "number" },
-                "m": { "title": "M", "default": 3.0, "type": "number" }
-            }
-        },
         "ExponentialParams": {
             "title": "ExponentialParams",
             "type": "object",
@@ -100,6 +87,19 @@
                 "x0": { "title": "X0", "default": 0.0, "type": "number" },
                 "m": { "title": "M", "default": 0.0025, "type": "number" },
                 "n": { "title": "N", "default": 2.0, "type": "number" }
+            }
+        },
+        "LogisticParams": {
+            "title": "LogisticParams",
+            "type": "object",
+            "properties": {
+                "q": { "title": "Q", "default": 0.5, "type": "number" },
+                "a": { "title": "A", "default": 1, "type": "integer" },
+                "k": { "title": "K", "default": 1.0, "type": "number" },
+                "b": { "title": "B", "default": 3.0, "type": "number" },
+                "v": { "title": "V", "default": 0.5, "type": "number" },
+                "c": { "title": "C", "default": 1.0, "type": "number" },
+                "m": { "title": "M", "default": 3.0, "type": "number" }
             }
         },
         "CurveConfig": {
@@ -114,8 +114,8 @@
                     "title": "Curve Params",
                     "default": { "y0": 0.0, "x0": 0.0, "m": 0.0025, "n": 2.0 },
                     "anyOf": [
-                        { "$ref": "#/definitions/LogisticParams" },
-                        { "$ref": "#/definitions/ExponentialParams" }
+                        { "$ref": "#/definitions/ExponentialParams" },
+                        { "$ref": "#/definitions/LogisticParams" }
                     ]
                 }
             }

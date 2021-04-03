@@ -1,6 +1,7 @@
-from bonding_curve_simulator.market.growth_curves import CurveConfig
-from pydantic.main import BaseModel
 from enum import Enum
+
+from bonding_curve_simulator.globals import BaseModel
+from bonding_curve_simulator.market.growth_curves import CurveConfig
 
 
 class TaxType(Enum):

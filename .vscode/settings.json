@@ -5,5 +5,10 @@
     "python.languageServer": "Pylance",
     "yaml.schemas": {
         "config/schema.json": "config/*.yml"
+    },
+    "files.autoSave": "afterDelay",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
     }
 }

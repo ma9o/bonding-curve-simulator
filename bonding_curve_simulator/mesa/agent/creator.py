@@ -1,18 +1,18 @@
 from __future__ import annotations
+
+from typing import TYPE_CHECKING, cast
+
+from mesa import Agent
+
+from bonding_curve_simulator.globals import BaseModel
 from bonding_curve_simulator.market.exchange.types import WealthConfig
 from bonding_curve_simulator.market.growth_curves import (
     CurveConfig,
     curve_type_function,
 )
 
-from typing import TYPE_CHECKING, cast
-
 if TYPE_CHECKING:
     from bonding_curve_simulator.mesa.simulation_model import SimulationModel
-
-
-from mesa import Agent
-from pydantic.main import BaseModel
 
 
 class CreatorAgentConfig(BaseModel):
@@ -35,7 +35,10 @@ class CreatorAgent(Agent):
         )
 
     def step(self):
-        model = cast(SimulationModel, self.model)
+        if TYPE_CHECKING:
+            model = cast(SimulationModel, self.model)
+        else:
+            model = self.model
 
         steps = model.schedule.steps
 

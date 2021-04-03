@@ -1,18 +1,19 @@
-from bonding_curve_simulator.market.exchange.exchange import Exchange
-from bonding_curve_simulator.mesa.agent.trader import TraderAgent, TraderAgentConfig
-from bonding_curve_simulator.mesa.agent.creator import CreatorAgent, CreatorAgentConfig
-from bonding_curve_simulator.market.growth_curves import CurveConfig
-from typing import Callable, List, Tuple
-from mesa import Model
-from mesa.time import RandomActivation
-from mesa.datacollection import DataCollector
+import uuid
 from math import floor
-from pydantic import BaseModel
+from typing import Callable, List, Tuple
+
+from mesa import Model
+from mesa.datacollection import DataCollector
+from mesa.time import RandomActivation
+
+from bonding_curve_simulator.globals import BaseModel
+from bonding_curve_simulator.market.exchange.exchange import Exchange
 from bonding_curve_simulator.market.growth_curves import (
     CurveConfig,
     curve_type_function,
 )
-import uuid
+from bonding_curve_simulator.mesa.agent.creator import CreatorAgent, CreatorAgentConfig
+from bonding_curve_simulator.mesa.agent.trader import TraderAgent, TraderAgentConfig
 
 
 class TraderAgentsConfig(BaseModel):
@@ -71,8 +72,8 @@ class SimulationModel(Model):
         self.datacollector = DataCollector(
             model_reporters={
                 "Price": self.exchange.current_price,
-                "Supply": lambda: self.exchange.supply,
-                "Reserve": lambda: self.exchange.reserve,
+                "Supply": lambda _: self.exchange.supply,
+                "Reserve": lambda _: self.exchange.reserve,
             },
             agent_reporters={"Supply": "supply", "Reserve": "reserve"},
         )

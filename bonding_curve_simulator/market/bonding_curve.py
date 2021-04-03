@@ -1,5 +1,6 @@
 import scipy.integrate as integrate
 from scipy.optimize import fsolve
+
 from bonding_curve_simulator.market.growth_curves import (
     CurveConfig,
     curve_type_function,

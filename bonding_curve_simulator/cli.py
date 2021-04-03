@@ -1,19 +1,19 @@
 """Console script for bonding_curve_simulator."""
 import sys
+from typing import Callable
+
 import click
 import funcy
 import yaml
-from typing import Callable
 
-
-from bonding_curve_simulator.mesa.simulation_model import SimulationModel
-from bonding_curve_simulator.helpers.outfile import with_outfile
-from bonding_curve_simulator.helpers.profiling import with_profiling
 from bonding_curve_simulator.bonding_curve_simulator import (
     SimulationConfig,
     init_model,
     run_simulation,
 )
+from bonding_curve_simulator.helpers.outfile import with_outfile
+from bonding_curve_simulator.helpers.profiling import with_profiling
+from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 
 
 @click.command()
@@ -34,9 +34,13 @@ def main(
     config_file,
 ):
 
-    config = yaml.full_load(config_file)
+    config_dict = yaml.full_load(config_file)
 
-    model = init_model(SimulationConfig(**config))
+    config = SimulationConfig.parse_obj(config_dict)
+
+    print(config)
+
+    model = init_model(config)
 
     entrypoint = run_simulation
 

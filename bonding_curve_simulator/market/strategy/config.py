@@ -1,4 +1,4 @@
-from pydantic.main import BaseModel
+from bonding_curve_simulator.globals import BaseModel
 
 
 class StrategyParams(BaseModel):

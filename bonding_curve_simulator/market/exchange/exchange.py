@@ -1,7 +1,7 @@
-from bonding_curve_simulator.market.exchange.types import ExchangeConfig, TaxType
 from bonding_curve_simulator.market.bonding_curve import BondingCurve
-from bonding_curve_simulator.mesa.agent.trader import TraderAgent
+from bonding_curve_simulator.market.exchange.types import ExchangeConfig, TaxType
 from bonding_curve_simulator.mesa.agent.creator import CreatorAgent
+from bonding_curve_simulator.mesa.agent.trader import TraderAgent
 
 
 class Exchange:

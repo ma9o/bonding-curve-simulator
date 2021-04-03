@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Union
+
 import numpy as np
-from pydantic.main import BaseModel
+
+from bonding_curve_simulator.globals import BaseModel
 
 
 class CurveType(Enum):
@@ -10,15 +12,10 @@ class CurveType(Enum):
     LOGISTIC = "logistic"
 
 
-class CurveParams(BaseModel):
-    y0 = 0.0
-    x0 = 0.0
-
-
 # https://en.wikipedia.org/wiki/Generalised_logistic_function
-class LogisticParams(CurveParams):
-    # q = x0
-    # a = y0
+class LogisticParams(BaseModel):
+    q = 0.5
+    a = 1
     k = 1.0
     b = 3.0
     v = 0.5
@@ -26,14 +23,16 @@ class LogisticParams(CurveParams):
     m = 3.0
 
 
-class ExponentialParams(CurveParams):
+class ExponentialParams(BaseModel):
+    y0 = 0.0
+    x0 = 0.0
     m = 1.0 / 400
     n = 2.0
 
 
 class CurveConfig(BaseModel):
     curve_type: CurveType = CurveType.EXPONENTIAL
-    curve_params: Union[LogisticParams, ExponentialParams] = ExponentialParams()
+    curve_params: Union[ExponentialParams, LogisticParams] = ExponentialParams()
 
 
 def exponential(params: ExponentialParams) -> Callable[[float], float]:
@@ -41,9 +40,9 @@ def exponential(params: ExponentialParams) -> Callable[[float], float]:
 
 
 def logistic(params: LogisticParams) -> Callable[[float], float]:
-    return lambda x: params.y0 + (
-        (params.k - params.y0)
-        / (params.c + ((params.x0 * np.e) ** (-params.b * (x - params.m))))
+    return lambda x: params.a + (
+        (params.k - params.a)
+        / (params.c + ((params.q * np.e) ** (-params.b * (x - params.m))))
         ** (1 / params.v)
     )
 
