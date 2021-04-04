@@ -5,6 +5,7 @@ from typing import Callable, List, Tuple
 from mesa import Model
 from mesa.datacollection import DataCollector
 from mesa.time import RandomActivation
+from progress.bar import Bar
 
 from bonding_curve_simulator.globals import BaseModel
 from bonding_curve_simulator.market.exchange.exchange import Exchange
@@ -36,6 +37,8 @@ class SimulationModel(Model):
         super().__init__()
 
         self.max_steps = config.max_steps
+
+        self.progress = Bar("Processing", max=self.max_steps)
 
         self.schedule = RandomActivation(self)
 
@@ -93,6 +96,8 @@ class SimulationModel(Model):
 
             self.agent_config_growth.insert(0, (i, growth, config))
 
+        print(" | Agents: %d\r" % len(self.schedule.agents), end="")
+
     def step(self):
         self.__agent_arrival__()
 
@@ -100,5 +105,7 @@ class SimulationModel(Model):
 
         if self.schedule.steps > self.max_steps:
             self.running = False
+            self.progress.finish()
         else:
             self.schedule.step()
+            self.progress.next()

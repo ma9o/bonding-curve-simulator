@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Union
 
@@ -36,15 +35,23 @@ class CurveConfig(BaseModel):
 
 
 def exponential(params: ExponentialParams) -> Callable[[float], float]:
-    return lambda x: params.y0 + params.m * ((x - params.x0) ** params.n)
+    y0, m, x0, n = params.y0, params.m, params.x0, params.n
+
+    return lambda x: y0 + m * ((x - x0) ** n)
 
 
 def logistic(params: LogisticParams) -> Callable[[float], float]:
-    return lambda x: params.a + (
-        (params.k - params.a)
-        / (params.c + ((params.q * np.e) ** (-params.b * (x - params.m))))
-        ** (1 / params.v)
+    a, k, c, q, b, m, v = (
+        params.a,
+        params.k,
+        params.c,
+        params.q,
+        params.b,
+        params.m,
+        params.v,
     )
+
+    return lambda x: a + ((k - a) / (c + ((q * np.e) ** (-b * (x - m)))) ** (1 / v))
 
 
 curve_type_function: dict[CurveType, Callable[[Any], Callable[[float], float]]] = {

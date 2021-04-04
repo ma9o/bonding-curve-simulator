@@ -35,10 +35,8 @@ model_config:
       curve_config:
         curve_type: exponential
         curve_params:
-          y0: 0
-          x0: 0
-          m: 0.0025
-          n: 2
+          m: 100
+          n: 0
   creator:
     wealth_config:
       supply: 100

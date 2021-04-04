@@ -24,7 +24,10 @@ from bonding_curve_simulator.mesa.simulation_model import SimulationModel
     is_flag=True,
 )
 @click.option(
-    "--outdir", help="Save datacollector results.", type=click.Path(exists=True)
+    "--outdir",
+    help="Save datacollector results.",
+    type=click.Path(exists=True, file_okay=False),
+    default="./datacollector",
 )
 @click.argument("config-file", type=click.File("rb"), nargs=1)
 def main(
@@ -37,7 +40,7 @@ def main(
 
     config = SimulationConfig.parse_obj(config_dict)
 
-    debug(config)
+    # debug(config)
 
     model = init_model(config)
 

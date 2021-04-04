@@ -4,18 +4,19 @@
 
 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC548562/#__sec4title
 
-# It suggests that institutions strongly shape our behavior, so that some of the properties of markets may depend 
+# It suggests that institutions strongly shape our behavior, so that some of the properties of markets may depend
 # more on the structure of institutions than on the rationality of individuals.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from bonding_curve_simulator.market.strategy.config import StrategyParams
 from bonding_curve_simulator.market.strategy.strategy import Strategy
 
 if TYPE_CHECKING:
     from bonding_curve_simulator.mesa.agent.trader import TraderAgent
+    from bonding_curve_simulator.mesa.simulation_model import SimulationModel
 
 
 class ZIStrategy(Strategy):
@@ -36,4 +37,19 @@ class ZIStrategy(Strategy):
         #         reverse=True)]
 
     def execute(self, agent: TraderAgent):
-        return super().execute(agent)
+        # TODO: use config
+        r = agent.model.random.uniform(0, 1)
+
+        if TYPE_CHECKING:
+            model = cast(SimulationModel, agent.model)
+        else:
+            model = agent.model
+
+        if r < 0.25:
+            sale_amount = model.random.uniform(0, agent.supply)
+            model.exchange.sell(agent, sale_amount)
+        elif r > 0.75:
+            reserve_amount = model.random.uniform(0.0, agent.reserve)
+            model.exchange.buy(agent, reserve_amount)
+        else:
+            pass
