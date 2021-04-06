@@ -106,5 +106,4 @@ ENV/
 
 # Datacollector
 datacollector/*
-!datacollector/.keep
-!datacollector/*.ipynb
+!datacollector/notebooks

@@ -10,7 +10,7 @@ exchange_config:
     supply: 10
     reserve: 10
   tax_config:
-    tax_amount: 0
+    tax_amount: 0.02
     tax_type: relative
 model_config:
   max_steps: 3650
@@ -19,24 +19,12 @@ model_config:
         wealth_config:
           supply: 0
           reserve: 100
-        # strategy_config:
-        #   strategy_type: zi
-        #   params:
-        #     sigma_n: 1000
-        #     r_bar: 100000
-        #     kappa: 0.05
-        #     sigma_s: 100000
-        #     q_max: 10
-        #     sigma_pv: 5000000
-        #     R_min: 0
-        #     R_max: 250
-        #     eta: 1
-        #     lambda_a: 0.005
       curve_config:
         curve_type: exponential
         curve_params:
-          m: 100
-          n: 0
+          m: 0.0000388121
+          n: 2.2766242792778003144078262567225973491484920946499536355393339790
+          y0: 10
   creator:
     wealth_config:
       supply: 10

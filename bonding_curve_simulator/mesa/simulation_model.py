@@ -50,8 +50,8 @@ class SimulationModel(Model):
 
         self.exchange.set_creator(creator_agent)
 
-        self.agent_config_growth: List[
-            Tuple[int, Callable[[float], float], TraderAgentConfig]
+        self.agent_configs: List[
+            Tuple[Callable[[float], float], TraderAgentConfig]
         ] = []
 
         for c in config.agents:
@@ -64,9 +64,8 @@ class SimulationModel(Model):
                 a = TraderAgent(uuid.uuid4(), self, c.agent_config)
                 self.schedule.add(a)
 
-            self.agent_config_growth.append(
+            self.agent_configs.append(
                 (
-                    n_initial_agents,
                     agent_growth,
                     c.agent_config,
                 )
@@ -82,19 +81,17 @@ class SimulationModel(Model):
         )
 
     def __agent_arrival__(self):
-        size = len(self.agent_config_growth)
+        size = len(self.agent_configs)
         for _ in range(size):
-            initial, growth, config = self.agent_config_growth.pop()
+            growth, config = self.agent_configs.pop()
 
-            i = initial
-            for i in range(
-                initial,
-                floor(growth(self.schedule.steps)),
-            ):
+            delta = floor(growth(self.schedule.steps)) - len(self.schedule.agents)
+
+            for _ in range(delta):
                 a = TraderAgent(uuid.uuid4(), self, config)
                 self.schedule.add(a)
 
-            self.agent_config_growth.insert(0, (i, growth, config))
+            self.agent_configs.insert(0, (growth, config))
 
         print(" | Agents: %d\r" % len(self.schedule.agents), end="")
 
