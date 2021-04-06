@@ -15,41 +15,52 @@ class Exchange:
     def set_creator(self, creator: CreatorAgent):
         self.creator = creator
 
-    def buy(self, trader: TraderAgent, reserve_amount) -> None:
+    def __transact__(self, trader: TraderAgent, supply, reserve):
+        self.supply += supply
+        trader.supply += supply
 
-        # Apply tax to transaction
-        tax = None
+        self.reserve += reserve
+        trader.reserve -= reserve
+
+    def __get_tax_amount__(self, reserve_amount) -> float:
+        tax = 0
         if self.tax_type == TaxType.ABSOLUTE:
             if reserve_amount <= self.tax_amount:
-                return
+                return 0
             else:
                 tax = self.tax_amount
         elif self.tax_type == TaxType.RELATIVE:
             tax = reserve_amount * self.tax_amount
 
-        # Send tax to creator
-        self.creator.reserve += tax
+        return tax
 
-        # Perform transaction
-        reserve_amount -= tax
+    def buy(self, trader: TraderAgent, reserve_amount) -> None:
+        reserve_amount = min(reserve_amount, self.reserve)
+
+        if reserve_amount <= 0:
+            return
+
+        tax = self.__get_tax_amount__(reserve_amount)
+
         supply_amount = self.bonding_curve.get_purchase_return(
-            self.supply, reserve_amount
+            self.supply, reserve_amount - tax
         )
 
-        trader.reserve -= reserve_amount
-        trader.supply += supply_amount
-
-        self.reserve += reserve_amount
-        self.supply -= supply_amount
+        if self.supply - supply_amount > 0:
+            self.creator.reserve += tax
+            reserve_amount -= tax
+            self.__transact__(trader, supply_amount, reserve_amount)
 
     def sell(self, trader: TraderAgent, supply_amount) -> None:
+        supply_amount = min(supply_amount, self.supply)
+
+        if supply_amount <= 0:
+            return
+
         reserve_amount = self.bonding_curve.get_sale_return(self.supply, supply_amount)
 
-        trader.supply -= supply_amount
-        trader.reserve += reserve_amount
-
-        self.supply += supply_amount
-        self.reserve -= reserve_amount
+        if self.reserve - reserve_amount > 0:
+            self.__transact__(trader, -supply_amount, -reserve_amount)
 
     def current_price(self) -> float:
         return self.bonding_curve.current_price(self.supply)

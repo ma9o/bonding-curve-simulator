@@ -42,4 +42,6 @@ class CreatorAgent(Agent):
 
         steps = model.schedule.steps
 
-        model.exchange.reserve += self.growth_curve(steps)
+        if steps % 30 == 0:
+            self.reserve += self.growth_curve(steps)
+            model.exchange.buy(self, self.reserve)

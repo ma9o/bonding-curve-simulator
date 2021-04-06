@@ -48,7 +48,7 @@ class ZIStrategy(Strategy):
         if r < 0.25:
             sale_amount = model.random.uniform(0, agent.supply)
             model.exchange.sell(agent, sale_amount)
-        elif r > 0.75:
+        elif r > 0.5:
             reserve_amount = model.random.uniform(0.0, agent.reserve)
             model.exchange.buy(agent, reserve_amount)
         else:

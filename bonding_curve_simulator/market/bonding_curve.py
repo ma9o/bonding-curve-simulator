@@ -16,9 +16,17 @@ class BondingCurve:
     def current_price(self, supply) -> float:
         return self.bonding_formula(supply)
 
+    def __integrate__(self, function, a, b):
+        try:
+            return integrate.quad(function, a, b)
+        except RuntimeError as e:
+            raise (Exception(e, a, b))
+
     # Integrate curve: supply -> (supply - sale_amount)
     def get_sale_return(self, supply: float, sale_amount: float) -> float:
-        y, abserr = integrate.quad(self.bonding_formula, supply, supply - sale_amount)
+        y, abserr = self.__integrate__(
+            self.bonding_formula, supply, supply - sale_amount
+        )
         return abs(y)
 
     # Solve integral: supply -> (supply + x) = purchase_cost, return difference
@@ -26,7 +34,7 @@ class BondingCurve:
         # TODO: bottleneck
         x, info, ier, msg = fsolve(
             lambda x: purchase_cost
-            - integrate.quad(self.bonding_formula, supply, x)[0],
+            - self.__integrate__(self.bonding_formula, supply, x)[0],
             supply,
             full_output=True,
         )
@@ -34,4 +42,4 @@ class BondingCurve:
         if ier == 1:
             return x[0] - supply
         else:
-            raise (msg)
+            raise Exception(msg, supply, purchase_cost)

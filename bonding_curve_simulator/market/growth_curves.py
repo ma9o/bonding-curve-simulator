@@ -37,7 +37,7 @@ class CurveConfig(BaseModel):
 def exponential(params: ExponentialParams) -> Callable[[float], float]:
     y0, m, x0, n = params.y0, params.m, params.x0, params.n
 
-    return lambda x: y0 + m * ((x - x0) ** n)
+    return lambda x: y0 + (m * ((x - x0) ** n))
 
 
 def logistic(params: LogisticParams) -> Callable[[float], float]:

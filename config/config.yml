@@ -7,8 +7,8 @@ exchange_config:
       m: 0.0025
       n: 2
   wealth_config:
-    supply: 100
-    reserve: 100
+    supply: 10
+    reserve: 10
   tax_config:
     tax_amount: 0
     tax_type: relative
@@ -16,22 +16,22 @@ model_config:
   max_steps: 3650
   agents:
     - agent_config:
-        strategy_config:
-          strategy_type: zi
-          params:
-            sigma_n: 1000
-            r_bar: 100000
-            kappa: 0.05
-            sigma_s: 100000
-            q_max: 10
-            sigma_pv: 5000000
-            R_min: 0
-            R_max: 250
-            eta: 1
-            lambda_a: 0.005
         wealth_config:
-          supply: 100
+          supply: 0
           reserve: 100
+        # strategy_config:
+        #   strategy_type: zi
+        #   params:
+        #     sigma_n: 1000
+        #     r_bar: 100000
+        #     kappa: 0.05
+        #     sigma_s: 100000
+        #     q_max: 10
+        #     sigma_pv: 5000000
+        #     R_min: 0
+        #     R_max: 250
+        #     eta: 1
+        #     lambda_a: 0.005
       curve_config:
         curve_type: exponential
         curve_params:
@@ -39,12 +39,15 @@ model_config:
           n: 0
   creator:
     wealth_config:
-      supply: 100
-      reserve: 100
+      supply: 10
+      reserve: 0
     curve_config:
-      curve_type: exponential
+      curve_type: logistic
       curve_params:
-        y0: 0
-        x0: 0
-        m: 0.0025
-        n: 2
+        a: 19.62153284167117
+        k: 513.4793145897387
+        c: 0.28089581922142964
+        q: 0.3459871425861641
+        b: -0.04108712657497574
+        m: 1160.4354435463893
+        v: 0.4201762094399637
